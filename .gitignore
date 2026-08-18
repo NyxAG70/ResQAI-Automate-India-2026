@@ -1,0 +1,51 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Build / generated output
+dist/
+build/
+out/
+coverage/
+*.tsbuildinfo
+*.map
+
+# Caches / temporary files
+.cache/
+.local/
+.tmp/
+tmp/
+temporary/
+*.tmp
+*.temp
+*.log
+
+# Replit / Agent state
+.agents/
+.replit
+.replitignore
+replit.md
+**/.replit-artifact/
+attached_assets/
+
+# IDE / OS
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Misc
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
