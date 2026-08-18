@@ -1,4 +1,4 @@
-# ResQAI — AI-Powered Disaster Response & Rescue Intelligence
+# ResQAI — Disaster Response & Rescue Intelligence
 
 **Team:** STRYKEE  
 **Members:**
@@ -8,7 +8,7 @@
 
 ## 1. Project Overview
 
-ResQAI is a disaster-response intelligence platform concept for helping human responders organize incoming incident reports and make calmer, better-informed decisions under pressure.
+ResQAI is a disaster-response platform concept for helping human responders organize incoming incident reports and make calmer, better-informed decisions under pressure.
 
 This repository is the **initial foundation build** prepared for the first public development snapshot. It is not the final MVP. Development will continue before the final hackathon evaluation.
 
@@ -22,7 +22,7 @@ The planned ResQAI workflow is:
 
 1. A person submits an incident report.
 2. The platform structures the report.
-3. AI extracts response-relevant signals.
+3. The system extracts response-relevant signals.
 4. A deterministic priority engine produces a transparent score.
 5. Responders review incidents on an operations dashboard and map.
 6. A human decides and updates the incident status.
@@ -49,7 +49,6 @@ The current snapshot contains the foundation for this workflow, not the complete
 - Functional incident report form
 - Connecting the React interface to the incident API
 - End-to-end persistence from the user interface
-- AI-assisted incident analysis
 - Connecting analyzed signals to the priority engine
 - Responder operations dashboard
 - Incident details and human status workflow
@@ -58,7 +57,6 @@ The current snapshot contains the foundation for this workflow, not the complete
 
 - Leaflet + OpenStreetMap incident map
 - Image upload and evidence handling
-- AI provider integration and failure states
 - Demo data and presentation mode
 - Authentication, authorization, rate limiting, and production security hardening
 - Notifications and responder handoff workflows
@@ -76,7 +74,7 @@ Incident report
       ↓
 Structured extraction
       ↓
-AI analysis
+Signal analysis
       ↓
 Deterministic priority score
       ↓
@@ -141,7 +139,6 @@ cp .env.example .env
 | `DATABASE_URL` | API, migrations, integration tests | `postgresql://user:password@localhost:5432/resqai` |
 | `PORT` | API or frontend process | `8080` |
 | `BASE_PATH` | Frontend process | `/` |
-| `AI_API_KEY` | Future AI integration only | Placeholder until AI is implemented |
 
 Never commit `.env` or real credentials. Use `.env.example` only for placeholders.
 
@@ -186,7 +183,6 @@ The API integration tests use the configured PostgreSQL database and the applied
 The remaining MVP work is intentionally not represented as completed functionality:
 
 - Incident report form with validation
-- AI analysis of incident descriptions and optional evidence
 - Transparent priority scoring from structured factors
 - Operations dashboard with filters and status controls
 - GIS map with incident markers
@@ -194,7 +190,7 @@ The remaining MVP work is intentionally not represented as completed functionali
 
 ## 13. Future Scope
 
-Potential future extensions include multilingual reporting, offline-first field capture, responder notifications, audit history, role-based access, regional deployment, and evaluation tooling for AI extraction quality.
+Potential future extensions include multilingual reporting, offline-first field capture, responder notifications, audit history, role-based access, regional deployment, and evaluation tooling for signal extraction quality.
 
 ## 14. Team
 

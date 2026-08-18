@@ -24,14 +24,6 @@ temporary/
 *.temp
 *.log
 
-# Replit / Agent state
-.agents/
-.replit
-.replitignore
-replit.md
-**/.replit-artifact/
-attached_assets/
-
 # IDE / OS
 .vscode/*
 !.vscode/settings.json
