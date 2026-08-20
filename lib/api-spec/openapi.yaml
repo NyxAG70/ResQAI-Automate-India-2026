@@ -26,6 +26,19 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /dashboard:
+    get:
+      operationId: getDashboard
+      tags: [incidents]
+      summary: Get the emergency operations dashboard
+      description: Returns incident statistics, prioritized rescue zones, an operational summary, and response recommendations.
+      responses:
+        "200":
+          description: Emergency operations dashboard
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardResponse"
   /incidents:
     get:
       operationId: listIncidents
@@ -303,6 +316,142 @@ components:
       properties:
         status:
           $ref: "#/components/schemas/IncidentStatus"
+    DashboardIncident:
+      type: object
+      required:
+        - id
+        - title
+        - description
+        - disasterType
+        - locationDescription
+        - latitude
+        - longitude
+        - severity
+        - confidence
+        - peopleAffected
+        - source
+        - timestamp
+        - accessibility
+        - status
+        - priorityScore
+        - priorityLevel
+        - incidentType
+        - aiSummary
+        - isDemo
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        disasterType:
+          $ref: "#/components/schemas/DisasterType"
+        locationDescription:
+          type: string
+        latitude:
+          type: ["number", "null"]
+        longitude:
+          type: ["number", "null"]
+        severity:
+          type: number
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+        peopleAffected:
+          type: integer
+          minimum: 0
+        source:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        accessibility:
+          type: number
+        status:
+          $ref: "#/components/schemas/IncidentStatus"
+        priorityScore:
+          type: number
+        priorityLevel:
+          $ref: "#/components/schemas/PriorityLevel"
+        incidentType:
+          type: string
+        aiSummary:
+          type: string
+        isDemo:
+          type: boolean
+    DashboardStats:
+      type: object
+      required:
+        - activeIncidents
+        - criticalIncidents
+        - affectedPopulation
+        - activeOperations
+        - incomingReports
+      properties:
+        activeIncidents:
+          type: integer
+        criticalIncidents:
+          type: integer
+        affectedPopulation:
+          type: integer
+        activeOperations:
+          type: integer
+        incomingReports:
+          type: integer
+    DashboardRecommendation:
+      type: object
+      required:
+        - id
+        - priority
+        - action
+        - reason
+        - targetLocation
+        - requiredResource
+        - status
+      properties:
+        id:
+          type: string
+        priority:
+          $ref: "#/components/schemas/PriorityLevel"
+        action:
+          type: string
+        reason:
+          type: string
+        targetLocation:
+          type: string
+        requiredResource:
+          type: string
+        status:
+          type: string
+    DashboardResponse:
+      type: object
+      required:
+        - incidents
+        - stats
+        - summary
+        - recommendations
+        - generatedAt
+        - isDemo
+      properties:
+        incidents:
+          type: array
+          items:
+            $ref: "#/components/schemas/DashboardIncident"
+        stats:
+          $ref: "#/components/schemas/DashboardStats"
+        summary:
+          type: string
+        recommendations:
+          type: array
+          items:
+            $ref: "#/components/schemas/DashboardRecommendation"
+        generatedAt:
+          type: string
+          format: date-time
+        isDemo:
+          type: boolean
     ErrorResponse:
       type: object
       required:

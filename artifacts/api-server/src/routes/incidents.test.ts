@@ -67,10 +67,15 @@ test("creates, retrieves, lists, and updates an incident", async () => {
     status: string;
     analysisStatus: string;
     peopleAffected: number;
+    priorityScore: number;
+    priorityLevel: string;
   };
   createdIncidentIds.push(created.id);
   assert.equal(created.status, "awaiting_response");
-  assert.equal(created.analysisStatus, "pending");
+  assert.equal(created.analysisStatus, "complete");
+  assert.equal(typeof created.priorityScore, "number");
+  assert.ok(created.priorityScore > 0);
+  assert.ok(["low", "medium", "high", "critical"].includes(created.priorityLevel));
   assert.equal(created.peopleAffected, 6);
 
   const getResponse = await request(`/api/incidents/${created.id}`);
@@ -82,6 +87,24 @@ test("creates, retrieves, lists, and updates an incident", async () => {
   assert.equal(listResponse.status, 200);
   const listed = (await listResponse.json()) as Array<{ id: string }>;
   assert.ok(listed.some((incident) => incident.id === created.id));
+
+  const dashboardResponse = await request("/api/dashboard");
+  assert.equal(dashboardResponse.status, 200);
+  const dashboard = (await dashboardResponse.json()) as {
+    incidents: Array<{ id: string; priorityScore: number }>;
+    stats: { activeIncidents: number; affectedPopulation: number };
+    summary: string;
+    recommendations: Array<{ action: string; targetLocation: string }>;
+  };
+  const dashboardIncident = dashboard.incidents.find(
+    (incident) => incident.id === created.id,
+  );
+  assert.ok(dashboardIncident);
+  assert.equal(dashboardIncident.priorityScore, created.priorityScore);
+  assert.ok(dashboard.stats.activeIncidents > 0);
+  assert.ok(dashboard.stats.affectedPopulation >= created.peopleAffected);
+  assert.match(dashboard.summary, /Most urgent recommended action:/);
+  assert.ok(dashboard.recommendations.length > 0);
 
   const updateResponse = await request(
     `/api/incidents/${created.id}/status`,

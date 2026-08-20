@@ -18,6 +18,61 @@ export const HealthCheckResponse = zod.object({
 
 
 /**
+ * Returns incident statistics, prioritized rescue zones, an operational summary, and response recommendations.
+ * @summary Get the emergency operations dashboard
+ */
+export const getDashboardResponseIncidentsItemConfidenceMin = 0;
+export const getDashboardResponseIncidentsItemConfidenceMax = 1;
+
+export const getDashboardResponseIncidentsItemPeopleAffectedMin = 0;
+
+
+
+export const GetDashboardResponse = zod.object({
+  "incidents": zod.array(zod.object({
+  "id": zod.string(),
+  "title": zod.string(),
+  "description": zod.string(),
+  "disasterType": zod.enum(['flood', 'earthquake', 'cyclone', 'landslide', 'fire', 'other']),
+  "locationDescription": zod.string(),
+  "latitude": zod.number().nullable(),
+  "longitude": zod.number().nullable(),
+  "severity": zod.number(),
+  "confidence": zod.number().min(getDashboardResponseIncidentsItemConfidenceMin).max(getDashboardResponseIncidentsItemConfidenceMax),
+  "peopleAffected": zod.int().min(getDashboardResponseIncidentsItemPeopleAffectedMin),
+  "source": zod.string(),
+  "timestamp": zod.coerce.date(),
+  "accessibility": zod.number(),
+  "status": zod.enum(['awaiting_response', 'in_progress', 'resolved']),
+  "priorityScore": zod.number(),
+  "priorityLevel": zod.enum(['low', 'medium', 'high', 'critical']),
+  "incidentType": zod.string(),
+  "aiSummary": zod.string(),
+  "isDemo": zod.boolean()
+})),
+  "stats": zod.object({
+  "activeIncidents": zod.int(),
+  "criticalIncidents": zod.int(),
+  "affectedPopulation": zod.int(),
+  "activeOperations": zod.int(),
+  "incomingReports": zod.int()
+}),
+  "summary": zod.string(),
+  "recommendations": zod.array(zod.object({
+  "id": zod.string(),
+  "priority": zod.enum(['low', 'medium', 'high', 'critical']),
+  "action": zod.string(),
+  "reason": zod.string(),
+  "targetLocation": zod.string(),
+  "requiredResource": zod.string(),
+  "status": zod.string()
+})),
+  "generatedAt": zod.coerce.date(),
+  "isDemo": zod.boolean()
+})
+
+
+/**
  * Returns incidents ordered from newest to oldest.
  * @summary List incidents
  */

@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "ResQAI Emergency Operations Center"
+description = "A functional disaster-response command dashboard that turns incoming reports into prioritized incidents, rescue zones, GIS intelligence, operational summaries, and recommended response actions for emergency authorities."
+version = "1.0.0"
+id = "artifacts/resqai"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22827
+
+[services.development]
+run = "pnpm --filter @workspace/resqai run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/resqai", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/resqai/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22827"
+BASE_PATH = "/"

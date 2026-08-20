@@ -149,6 +149,62 @@ export interface IncidentStatusUpdate {
   status: IncidentStatus;
 }
 
+export interface DashboardIncident {
+  id: string;
+  title: string;
+  description: string;
+  disasterType: DisasterType;
+  locationDescription: string;
+  /** @nullable */
+  latitude: number | null;
+  /** @nullable */
+  longitude: number | null;
+  severity: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  confidence: number;
+  /** @minimum 0 */
+  peopleAffected: number;
+  source: string;
+  timestamp: string;
+  accessibility: number;
+  status: IncidentStatus;
+  priorityScore: number;
+  priorityLevel: PriorityLevel;
+  incidentType: string;
+  aiSummary: string;
+  isDemo: boolean;
+}
+
+export interface DashboardStats {
+  activeIncidents: number;
+  criticalIncidents: number;
+  affectedPopulation: number;
+  activeOperations: number;
+  incomingReports: number;
+}
+
+export interface DashboardRecommendation {
+  id: string;
+  priority: PriorityLevel;
+  action: string;
+  reason: string;
+  targetLocation: string;
+  requiredResource: string;
+  status: string;
+}
+
+export interface DashboardResponse {
+  incidents: DashboardIncident[];
+  stats: DashboardStats;
+  summary: string;
+  recommendations: DashboardRecommendation[];
+  generatedAt: string;
+  isDemo: boolean;
+}
+
 export interface ErrorResponse {
   error: string;
 }

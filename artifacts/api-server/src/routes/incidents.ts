@@ -3,6 +3,7 @@ import { Router, type IRouter } from "express";
 import {
   CreateIncidentBody,
   CreateIncidentResponse,
+  GetDashboardResponse,
   GetIncidentParams,
   GetIncidentResponse,
   ListIncidentsResponse,
@@ -12,17 +13,42 @@ import {
 } from "@workspace/api-zod";
 import { db, incidentsTable } from "@workspace/db";
 import { buildDashboard, DEMO_INCIDENTS } from "../services/dashboard";
+import { calculatePriority } from "../services/priority-engine";
 
 const router: IRouter = Router();
 
 router.get("/dashboard", async (req, res): Promise<void> => {
   try {
     const records = await db.select().from(incidentsTable).orderBy(desc(incidentsTable.createdAt));
-    const incidents = records.length ? records.map((i) => ({ ...i, confidence: 0.9, title: i.incidentType ?? i.locationDescription, timestamp: i.createdAt.toISOString(), severity: i.severity ?? 0, accessibility: i.accessibility ?? 5, priorityScore: i.priorityScore ?? 0, priorityLevel: i.priorityLevel ?? "low", source: i.reporterName ?? "Citizen", aiSummary: i.aiSummary ?? i.description, isDemo: i.isDemo })) : DEMO_INCIDENTS;
-    res.json(buildDashboard(incidents as any));
+    const persistedIncidents = records.map((incident) => ({
+      id: incident.id,
+      disasterType: incident.disasterType,
+      title: incident.incidentType ?? incident.locationDescription,
+      description: incident.description,
+      locationDescription: incident.locationDescription,
+      latitude: incident.latitude,
+      longitude: incident.longitude,
+      severity: incident.severity ?? 0,
+      confidence: incident.analysisStatus === "complete" ? 0.9 : 0.72,
+      peopleAffected: incident.peopleAffected,
+      source: incident.reporterName ?? "Citizen",
+      timestamp: incident.createdAt.toISOString(),
+      accessibility: incident.accessibility ?? 5,
+      status: incident.status,
+      priorityScore: incident.priorityScore ?? 0,
+      priorityLevel: incident.priorityLevel ?? "low",
+      incidentType: incident.incidentType ?? "Incoming report",
+      aiSummary: incident.aiSummary ?? incident.description,
+      isDemo: incident.isDemo,
+    }));
+    res.json(
+      GetDashboardResponse.parse(
+        buildDashboard([...persistedIncidents, ...DEMO_INCIDENTS]),
+      ),
+    );
   } catch (error) {
     req.log.error({ err: error }, "Failed to build dashboard");
-    res.json(buildDashboard(DEMO_INCIDENTS));
+    res.json(GetDashboardResponse.parse(buildDashboard(DEMO_INCIDENTS)));
   }
 });
 
@@ -49,6 +75,20 @@ router.post("/incidents", async (req, res): Promise<void> => {
   }
 
   try {
+    const severity = Math.min(10, parsed.data.peopleAffected >= 25 ? 9 : parsed.data.peopleAffected >= 10 ? 7 : parsed.data.peopleAffected > 0 ? 5 : 3);
+    const immediateThreat = parsed.data.peopleAffected > 0 ? 7 : 3;
+    const accessibility = parsed.data.latitude == null ? 5 : 6;
+    const priority = calculatePriority({ severity, peopleAffected: parsed.data.peopleAffected, immediateThreat, accessibility, timeCriticality: 8 });
+    const normalizedDescription = parsed.data.description.toLowerCase();
+    const incidentType = normalizedDescription.includes("medical")
+      ? "Medical emergency"
+      : normalizedDescription.includes("road") ||
+          normalizedDescription.includes("blocked")
+        ? "Blocked access"
+        : normalizedDescription.includes("building") ||
+            normalizedDescription.includes("collapse")
+          ? "Damaged building"
+          : "Rescue required";
     const [incident] = await db
       .insert(incidentsTable)
       .values({
@@ -59,12 +99,16 @@ router.post("/incidents", async (req, res): Promise<void> => {
         latitude: parsed.data.latitude ?? null,
         longitude: parsed.data.longitude ?? null,
         peopleAffected: parsed.data.peopleAffected,
-        severity: Math.min(10, parsed.data.peopleAffected >= 25 ? 9 : parsed.data.peopleAffected >= 10 ? 7 : parsed.data.peopleAffected > 0 ? 5 : 3),
-        immediateThreat: parsed.data.peopleAffected > 0 ? 7 : 3,
-        accessibility: parsed.data.latitude == null ? 5 : 6,
+        severity,
+        immediateThreat,
+        accessibility,
         timeCriticality: 8,
+        priorityScore: priority.score,
+        priorityLevel: priority.level,
         imageUrl: parsed.data.imageUrl ?? null,
-        aiSummary: "Report received and scored deterministically from submitted details.",
+        incidentType,
+        analysisStatus: "complete",
+        aiSummary: `Deterministic analysis: ${incidentType.toLowerCase()} reported at ${parsed.data.locationDescription}; ${parsed.data.peopleAffected} people affected.`,
       })
       .returning();
 

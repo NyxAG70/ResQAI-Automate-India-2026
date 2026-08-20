@@ -7,6 +7,10 @@
  */
 
 export * from './analysisStatus';
+export * from './dashboardIncident';
+export * from './dashboardRecommendation';
+export * from './dashboardResponse';
+export * from './dashboardStats';
 export * from './disasterType';
 export * from './errorResponse';
 export * from './healthStatus';
