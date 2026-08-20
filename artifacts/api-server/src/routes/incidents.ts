@@ -11,8 +11,20 @@ import {
   UpdateIncidentStatusResponse,
 } from "@workspace/api-zod";
 import { db, incidentsTable } from "@workspace/db";
+import { buildDashboard, DEMO_INCIDENTS } from "../services/dashboard";
 
 const router: IRouter = Router();
+
+router.get("/dashboard", async (req, res): Promise<void> => {
+  try {
+    const records = await db.select().from(incidentsTable).orderBy(desc(incidentsTable.createdAt));
+    const incidents = records.length ? records.map((i) => ({ ...i, confidence: 0.9, title: i.incidentType ?? i.locationDescription, timestamp: i.createdAt.toISOString(), severity: i.severity ?? 0, accessibility: i.accessibility ?? 5, priorityScore: i.priorityScore ?? 0, priorityLevel: i.priorityLevel ?? "low", source: i.reporterName ?? "Citizen", aiSummary: i.aiSummary ?? i.description, isDemo: i.isDemo })) : DEMO_INCIDENTS;
+    res.json(buildDashboard(incidents as any));
+  } catch (error) {
+    req.log.error({ err: error }, "Failed to build dashboard");
+    res.json(buildDashboard(DEMO_INCIDENTS));
+  }
+});
 
 router.get("/incidents", async (req, res): Promise<void> => {
   try {
@@ -47,7 +59,12 @@ router.post("/incidents", async (req, res): Promise<void> => {
         latitude: parsed.data.latitude ?? null,
         longitude: parsed.data.longitude ?? null,
         peopleAffected: parsed.data.peopleAffected,
+        severity: Math.min(10, parsed.data.peopleAffected >= 25 ? 9 : parsed.data.peopleAffected >= 10 ? 7 : parsed.data.peopleAffected > 0 ? 5 : 3),
+        immediateThreat: parsed.data.peopleAffected > 0 ? 7 : 3,
+        accessibility: parsed.data.latitude == null ? 5 : 6,
+        timeCriticality: 8,
         imageUrl: parsed.data.imageUrl ?? null,
+        aiSummary: "Report received and scored deterministically from submitted details.",
       })
       .returning();
 
