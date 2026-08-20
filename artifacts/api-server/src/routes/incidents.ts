@@ -12,6 +12,7 @@ import {
 } from "@workspace/api-zod";
 import { db, incidentsTable } from "@workspace/db";
 import { buildDashboard, DEMO_INCIDENTS } from "../services/dashboard";
+import { calculatePriority } from "../services/priority-engine";
 
 const router: IRouter = Router();
 
@@ -49,6 +50,10 @@ router.post("/incidents", async (req, res): Promise<void> => {
   }
 
   try {
+    const severity = Math.min(10, parsed.data.peopleAffected >= 25 ? 9 : parsed.data.peopleAffected >= 10 ? 7 : parsed.data.peopleAffected > 0 ? 5 : 3);
+    const immediateThreat = parsed.data.peopleAffected > 0 ? 7 : 3;
+    const accessibility = parsed.data.latitude == null ? 5 : 6;
+    const priority = calculatePriority({ severity, peopleAffected: parsed.data.peopleAffected, immediateThreat, accessibility, timeCriticality: 8 });
     const [incident] = await db
       .insert(incidentsTable)
       .values({
@@ -59,10 +64,12 @@ router.post("/incidents", async (req, res): Promise<void> => {
         latitude: parsed.data.latitude ?? null,
         longitude: parsed.data.longitude ?? null,
         peopleAffected: parsed.data.peopleAffected,
-        severity: Math.min(10, parsed.data.peopleAffected >= 25 ? 9 : parsed.data.peopleAffected >= 10 ? 7 : parsed.data.peopleAffected > 0 ? 5 : 3),
-        immediateThreat: parsed.data.peopleAffected > 0 ? 7 : 3,
-        accessibility: parsed.data.latitude == null ? 5 : 6,
+        severity,
+        immediateThreat,
+        accessibility,
         timeCriticality: 8,
+        priorityScore: priority.score,
+        priorityLevel: priority.level,
         imageUrl: parsed.data.imageUrl ?? null,
         aiSummary: "Report received and scored deterministically from submitted details.",
       })
