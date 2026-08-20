@@ -200,3 +200,5 @@ Potential future extensions include multilingual reporting, offline-first field 
 - Ayush Kumar — Team Member
 
 This repository is an honest initial development snapshot. It should not be interpreted as a claim that the final ResQAI MVP is complete.
+
+🚀 Live Demo: https://ResQAI.replit.app
