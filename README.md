@@ -1,204 +1,501 @@
-# ResQAI — Disaster Response & Rescue Intelligence
+# 🚨 ResQAI — AI-Powered Disaster Response & Incident Prioritization
 
-**Team:** STRYKEE  
-**Members:**
+**ResQAI** is a disaster-response platform designed to help emergency responders process incoming incident reports, understand critical information, prioritize victims and incidents, and make faster, better-informed decisions during high-pressure situations.
 
-- Ayush Gupta — Team Leader
-- Ayush Kumar — Team Member
+The platform combines **incident reporting, deterministic priority scoring, AI-assisted analysis, GIS visualization, disaster-image analysis, rescue-zone assignment, and responder decision support** into a unified operational workflow.
 
-## 1. Project Overview
+> **Built for Automate India 2026**
 
-ResQAI is a disaster-response platform concept for helping human responders organize incoming incident reports and make calmer, better-informed decisions under pressure.
+### 🌐 Live Demo
 
-This repository is the **initial foundation build** prepared for the first public development snapshot. It is not the final MVP. Development will continue before the final hackathon evaluation.
+**https://ResQAI.replit.app**
 
-## 2. Problem Statement
+### 💻 Source Code
 
-During disasters, reports arrive quickly, inconsistently, and from many locations. Responders need a reliable way to capture incident context, identify what needs attention, and hand structured information to a human decision-maker.
+**https://github.com/NyxAG70/ResQAI-Automate-India-2026**
 
-## 3. Proposed Solution
+---
 
-The planned ResQAI workflow is:
+## 1. 🚨 The Problem
 
-1. A person submits an incident report.
-2. The platform structures the report.
-3. The system extracts response-relevant signals.
-4. A deterministic priority engine produces a transparent score.
-5. Responders review incidents on an operations dashboard and map.
-6. A human decides and updates the incident status.
+During a disaster, information arrives rapidly from multiple sources and is often incomplete, inconsistent, or difficult to prioritize.
 
-The current snapshot contains the foundation for this workflow, not the complete workflow itself.
+Emergency responders may have to simultaneously determine:
 
-## 4. Current Development Status
+* Where incidents are occurring
+* Which victims require immediate assistance
+* How severe each incident is
+* What hazards are present
+* Which areas require rescue resources
+* What action should be taken first
 
-### Implemented
+Traditional workflows can make this difficult because information is fragmented across reports, maps, images, and communication channels.
 
-- ResQAI branding and foundation landing page
-- Responsive visual foundation and navigation
-- `/report` route with a clearly marked report-flow placeholder
-- Express API server with `/api/healthz`
-- OpenAPI incident lifecycle contract
-- Generated TypeScript API client and Zod validators
-- PostgreSQL/Drizzle incident schema and migration
-- Validated incident API endpoints for create, list, retrieve, and status update
-- Standalone deterministic priority engine with unit tests
-- API integration tests for incident lifecycle and invalid input
+### The core problem
 
-### In development
+> **How can we transform scattered disaster information into structured, prioritized, and actionable intelligence for human responders?**
 
-- Functional incident report form
-- Connecting the React interface to the incident API
-- End-to-end persistence from the user interface
-- Connecting analyzed signals to the priority engine
-- Responder operations dashboard
-- Incident details and human status workflow
+---
 
-### Planned / future
+# 2. 💡 Our Solution
 
-- Leaflet + OpenStreetMap incident map
-- Image upload and evidence handling
-- Demo data and presentation mode
-- Authentication, authorization, rate limiting, and production security hardening
-- Notifications and responder handoff workflows
-
-## 5. Current Foundation Features
-
-The current user-visible experience is intentionally small: a branded foundation page explains the product direction, navigation links to the report preview, and the report route explains that the functional flow is still in development.
-
-The backend foundation can already validate and persist incident lifecycle records independently of the unfinished frontend workflow.
-
-## 6. Planned MVP Workflow
+ResQAI provides a centralized disaster-response workflow:
 
 ```text
-Incident report
-      ↓
-Structured extraction
-      ↓
-Signal analysis
-      ↓
-Deterministic priority score
-      ↓
-Responder dashboard + map
-      ↓
-Human review and status decision
+Citizen / Incident Report
+          ↓
+Incident Structuring
+          ↓
+Signal & Hazard Analysis
+          ↓
+Deterministic Priority Engine
+          ↓
+Severity / Victim Prioritization
+          ↓
+GIS Operations Dashboard
+          ↓
+AI-Assisted Summary & Recommendation
+          ↓
+Human Responder Decision
 ```
 
-## 7. Technology Stack
+The system does **not replace emergency responders**.
 
-- Frontend: React + Vite
-- Backend: Express 5
-- Database: PostgreSQL + Drizzle ORM
-- Validation: Zod 4 and drizzle-zod
-- API contract/code generation: OpenAPI + Orval
-- Planned map: Leaflet + OpenStreetMap
-- Workspace: pnpm monorepo
-- Runtime: Node.js 24
-- Language: TypeScript
+Instead, ResQAI acts as a **decision-support layer**, organizing information and surfacing what deserves attention first.
 
-## 8. Project Structure
+---
+
+# 3. ⚡ Key Features
+
+## 🆘 Incident Reporting
+
+Responders or citizens can submit incident information including:
+
+* Incident description
+* Location
+* Latitude / longitude
+* Disaster context
+* Victim information
+* Severity-related information
+
+Submitted incidents can then flow into the operational dashboard.
+
+---
+
+## 🧠 Deterministic Priority Engine
+
+ResQAI uses a transparent priority-scoring system to determine which incidents require greater attention.
+
+The scoring process considers structured response factors rather than producing an unexplained black-box number.
+
+This allows responders to understand **why an incident received a particular priority**.
+
+### Why deterministic scoring?
+
+For emergency response, reproducibility matters.
+
+A responder should be able to understand:
+
+> **What factors caused this incident to become high priority?**
+
+The priority engine therefore remains deterministic and auditable.
+
+---
+
+# 4. 🗺️ GIS Operations Dashboard
+
+The ResQAI dashboard provides geographic context for incoming incidents.
+
+The GIS interface provides:
+
+* Incident markers
+* Geographic positioning
+* Incident distribution
+* Delhi geographic context
+* Interactive marker information
+* Operational visibility of incoming reports
+
+Instead of viewing incidents as isolated text records, responders can understand **where incidents are concentrated geographically**.
+
+---
+
+# 5. 🖼️ Disaster Image Analysis
+
+ResQAI includes a disaster-image analysis workflow.
+
+An uploaded disaster image can be analyzed to surface structured operational information such as:
+
+* Detected hazards
+* Confidence scores
+* Rescue-zone assignment
+* Response recommendations
+* Incident context
+
+The result is presented as **decision-support information** rather than an autonomous emergency decision.
+
+> **Important technical disclosure:** the current demonstration uses deterministic/simulated image-analysis behavior for the prototype workflow. It should not be interpreted as a production computer-vision model.
+
+This keeps the demonstration transparent while establishing the architecture for integration with a production CV model in the future.
+
+---
+
+# 6. 🤖 AI-Assisted Decision Support
+
+ResQAI is designed around a separation between:
+
+### Deterministic priority
+
+Used for:
+
+* Incident scoring
+* Priority calculation
+* Reproducible response ranking
+
+### AI-assisted interpretation
+
+Used for:
+
+* Incident summaries
+* Operational context
+* Response recommendations
+* Converting structured information into responder-friendly intelligence
+
+This separation is intentional.
+
+The system does not allow an opaque generative model to arbitrarily determine emergency priority.
+
+---
+
+# 7. 📊 Responder Dashboard
+
+The dashboard provides an operational overview of the current incident environment.
+
+It includes information such as:
+
+* Incoming incidents
+* Priority levels
+* Incident status
+* Geographic distribution
+* Key response metrics
+* Incident summaries
+* Recommendations
+* Filtering and incident exploration
+
+The goal is to reduce the cognitive load on responders by bringing relevant information into a single interface.
+
+---
+
+# 8. 🔄 End-to-End Workflow
+
+A typical ResQAI workflow looks like this:
+
+### Step 1 — Incident submission
+
+A user reports a disaster incident with relevant information and location.
+
+### Step 2 — Data structuring
+
+The platform converts the incoming information into a structured incident record.
+
+### Step 3 — Signal analysis
+
+Relevant response signals and hazard information are extracted.
+
+### Step 4 — Priority calculation
+
+The deterministic priority engine calculates the incident's response priority.
+
+### Step 5 — Geographic visualization
+
+The incident is displayed within the GIS operations interface.
+
+### Step 6 — AI-assisted interpretation
+
+Structured incident information can be transformed into a concise operational summary and recommendation.
+
+### Step 7 — Human decision
+
+A responder reviews the available information and makes the final operational decision.
+
+```text
+REPORT
+  │
+  ▼
+STRUCTURE
+  │
+  ▼
+ANALYZE
+  │
+  ▼
+PRIORITIZE
+  │
+  ▼
+VISUALIZE
+  │
+  ▼
+SUMMARIZE
+  │
+  ▼
+HUMAN DECISION
+```
+
+---
+
+# 9. 🏗️ System Architecture
+
+```text
+                    ┌─────────────────────┐
+                    │ Citizen / Responder │
+                    │      Interface      │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │   Incident API      │
+                    │   & Validation      │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │ Incident Persistence│
+                    │    PostgreSQL       │
+                    └──────────┬──────────┘
+                               │
+                ┌──────────────┴──────────────┐
+                ▼                             ▼
+     ┌─────────────────────┐       ┌─────────────────────┐
+     │ Deterministic       │       │ Signal / Image      │
+     │ Priority Engine     │       │ Analysis Workflow   │
+     └──────────┬──────────┘       └──────────┬──────────┘
+                │                             │
+                └──────────────┬──────────────┘
+                               ▼
+                    ┌─────────────────────┐
+                    │ Responder Dashboard │
+                    │    + GIS Map        │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │ Human Responder     │
+                    │ Decision            │
+                    └─────────────────────┘
+```
+
+---
+
+# 10. 🛠️ Technology Stack
+
+| Layer           | Technology                        |
+| --------------- | --------------------------------- |
+| Frontend        | React + Vite                      |
+| Backend         | Express 5                         |
+| Language        | TypeScript                        |
+| Database        | PostgreSQL                        |
+| ORM             | Drizzle ORM                       |
+| Validation      | Zod                               |
+| API Contract    | OpenAPI                           |
+| API Client      | Orval-generated TypeScript client |
+| GIS             | Leaflet + OpenStreetMap           |
+| Runtime         | Node.js                           |
+| Package Manager | pnpm                              |
+| Deployment      | Replit                            |
+
+---
+
+# 11. 📁 Project Structure
 
 ```text
 artifacts/
-  api-server/       Express API and incident routes
-  resqai/           React/Vite foundation application
-  mockup-sandbox/   Optional component design preview workspace
+├── api-server/
+│   └── Express API and incident routes
+│
+├── resqai/
+│   └── React/Vite frontend application
+│
+└── mockup-sandbox/
+    └── Component/design preview workspace
+
 lib/
-  api-spec/         OpenAPI contract and Orval configuration
-  api-client-react/ Generated React API client
-  api-zod/          Generated Zod validators
-  db/               Drizzle schema and migrations
-scripts/            Workspace maintenance scripts
+├── api-spec/
+│   └── OpenAPI contract and code generation
+│
+├── api-client-react/
+│   └── Generated React API client
+│
+├── api-zod/
+│   └── Generated Zod validators
+│
+└── db/
+    └── Drizzle schema and migrations
+
+scripts/
+└── Workspace maintenance utilities
 ```
 
-## 9. Setup Instructions
+---
 
-### Prerequisites
+# 12. 🔐 Data & API Layer
 
-- Node.js 24
-- pnpm
-- PostgreSQL
+ResQAI uses a structured backend architecture for incident lifecycle management.
 
-Clone the repository, then install dependencies:
+The API supports operations including:
 
-```bash
-pnpm install
-```
+* Incident creation
+* Incident retrieval
+* Incident listing
+* Incident status updates
+* Health checks
+* Input validation
 
-Copy the example environment file and replace only the local placeholder values:
+The API contract is defined using **OpenAPI**, with generated clients and validation schemas used to maintain consistency between the frontend and backend.
 
-```bash
-cp .env.example .env
-```
+---
 
-`DATABASE_URL` is required for the API, database commands, and integration tests. `PORT` is required by both application services. `BASE_PATH` is required by the Vite frontend.
+# 13. 🧪 Testing & Validation
 
-## 10. Environment Variables
+The project includes validation across multiple layers.
 
-| Variable | Required for | Example |
-| --- | --- | --- |
-| `DATABASE_URL` | API, migrations, integration tests | `postgresql://user:password@localhost:5432/resqai` |
-| `PORT` | API or frontend process | `8080` |
-| `BASE_PATH` | Frontend process | `/` |
+### Backend
 
-Never commit `.env` or real credentials. Use `.env.example` only for placeholders.
+* Type checking
+* API validation
+* Incident lifecycle testing
+* Invalid-input testing
+* Database integration testing
 
-## 11. How to Run
+### Priority Engine
 
-Run the API and frontend in separate terminals.
+The deterministic priority engine is independently testable to ensure consistent scoring behavior.
 
-### API server
+### End-to-End Demo Validation
 
-```bash
-export DATABASE_URL="postgresql://user:password@localhost:5432/resqai"
-export PORT=8080
-pnpm --filter @workspace/db run migrate
-pnpm --filter @workspace/api-server run dev
-```
+The demonstration workflow validates:
 
-The API is served under `/api`, including `GET /api/healthz`.
+* Incident submission
+* API persistence
+* Priority recalculation
+* Dashboard updates
+* Feed updates
+* GIS marker updates
+* KPI/summary updates
+* Filtering
+* Marker interaction
+* Image-analysis workflow
+* Mobile responsiveness
 
-### Frontend
+---
 
-```bash
-export PORT=5173
-export BASE_PATH=/
-pnpm --filter @workspace/resqai run dev
-```
+# 14. 🎯 Impact
 
-The API `dev` command builds before starting the server; it is not a file-watch command.
+ResQAI is designed around one principle:
 
-### Useful checks
+> **Emergency response should be information-driven, not information-overloaded.**
 
-```bash
-pnpm run typecheck
-PORT=5173 BASE_PATH=/ pnpm run build
-pnpm --filter @workspace/api-server run test
-pnpm --filter @workspace/api-spec run codegen
-```
+By bringing reports, prioritization, geographic context, hazard analysis, and responder recommendations into one platform, ResQAI aims to help emergency teams:
 
-The API integration tests use the configured PostgreSQL database and the applied Drizzle schema.
+* Identify critical incidents faster
+* Reduce information overload
+* Understand geographic incident distribution
+* Prioritize limited response resources
+* Maintain human oversight
+* Make more informed operational decisions
 
-## 12. Planned MVP Features
+---
 
-The remaining MVP work is intentionally not represented as completed functionality:
+# 15. 🚀 Innovation
 
-- Incident report form with validation
-- Transparent priority scoring from structured factors
-- Operations dashboard with filters and status controls
-- GIS map with incident markers
-- Incident detail and human review workflow
+ResQAI combines several response capabilities into a single workflow:
 
-## 13. Future Scope
+### 1. Transparent prioritization
 
-Potential future extensions include multilingual reporting, offline-first field capture, responder notifications, audit history, role-based access, regional deployment, and evaluation tooling for signal extraction quality.
+Priority is generated through deterministic factors rather than an unexplained black-box score.
 
-## 14. Team
+### 2. Human-in-the-loop AI
 
-### STRYKEE
+AI assists responders rather than autonomously making emergency decisions.
 
-- Ayush Gupta — Team Leader
-- Ayush Kumar — Team Member
+### 3. Geographic intelligence
 
-This repository is an honest initial development snapshot. It should not be interpreted as a claim that the final ResQAI MVP is complete.
+Incidents are connected to their physical locations through GIS visualization.
 
-🚀 Live Demo: https://ResQAI.replit.app
+### 4. Multi-modal incident context
+
+The platform can incorporate both structured incident reports and disaster imagery into the response workflow.
+
+### 5. Operational focus
+
+Instead of simply detecting disasters, ResQAI focuses on the question:
+
+> **“What should the responder pay attention to first?”**
+
+---
+
+# 16. 🔮 Future Scope
+
+The current system establishes a foundation for further development.
+
+Potential future capabilities include:
+
+* Production-grade computer vision models
+* Multilingual incident reporting
+* Offline-first field reporting
+* Responder notifications
+* Role-based access control
+* Authentication and authorization
+* Audit history
+* Resource allocation
+* Volunteer coordination
+* Citizen SOS integration
+* Advanced GIS analytics
+* Regional deployment
+* Real-time responder handoff
+* Model evaluation and monitoring
+
+---
+
+# 17. ⚠️ Prototype & Safety Disclaimer
+
+ResQAI is a **hackathon prototype and decision-support system**.
+
+It is not intended to autonomously control emergency services or replace trained emergency personnel.
+
+Priority scores, summaries, recommendations, and image-analysis outputs should be reviewed by qualified human responders before operational action.
+
+The image-analysis workflow currently demonstrates the intended product behavior using deterministic/simulated analysis rather than claiming production-grade computer vision.
+
+---
+
+# 18. 👥 Team — STRYKEE
+
+### Ayush Gupta
+
+**Team Leader**
+
+### Ayush Kumar
+
+**Team Member**
+
+---
+
+# 19. 🌐 Links
+
+### 🚀 Live Application
+
+**https://ResQAI.replit.app**
+
+### 💻 GitHub Repository
+
+**https://github.com/NyxAG70/ResQAI-Automate-India-2026**
+
+---
+
+# 20. 🏆 Built for Automate India 2026
+
+ResQAI was developed as a disaster-response technology concept focused on combining structured incident intelligence, transparent prioritization, geographic awareness, and human-centered AI assistance.
+
+**The objective is simple:**
+
+> ### Turn chaotic disaster information into actionable response intelligence.
+
+**ResQAI — Observe. Prioritize. Respond. 🚨**
